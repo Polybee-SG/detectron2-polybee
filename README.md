@@ -28,6 +28,62 @@ See this [interview](https://ai.meta.com/blog/detectron-everingham-prize/) to le
 
 See [installation instructions](https://detectron2.readthedocs.io/tutorials/install.html).
 
+## Building a Wheel
+
+Requirements: PyTorch >= 1.8, CUDA toolkit (>= 13.0 recommended), and a C++ compiler.
+
+**Build the wheel:**
+
+```bash
+python setup.py bdist_wheel
+```
+
+The wheel will be output to `dist/`. To force a CUDA build even if `torch.cuda.is_available()` returns false:
+
+```bash
+FORCE_CUDA=1 python setup.py bdist_wheel
+```
+
+**Verify CUDA extensions are included:**
+
+```bash
+unzip -l dist/detectron2-*.whl | grep _C
+```
+
+You should see `detectron2/_C.cpython-*.so` in the listing.
+
+**Install from the wheel:**
+
+```bash
+pip install dist/detectron2-*.whl
+```
+
+**Publish to AWS CodeArtifact:**
+
+```bash
+pip install twine --index-url https://pypi.org/simple/
+
+aws codeartifact login --tool twine \
+  --domain <your-domain> \
+  --domain-owner <your-account-id> \
+  --repository <your-repository> \
+  --region <your-region>
+
+twine upload --repository codeartifact dist/detectron2-*.whl
+```
+
+**Install from AWS CodeArtifact:**
+
+```bash
+aws codeartifact login --tool pip \
+  --domain <your-domain> \
+  --domain-owner <your-account-id> \
+  --repository <your-repository> \
+  --region <your-region>
+
+pip install detectron2
+```
+
 ## Getting Started
 
 See [Getting Started with Detectron2](https://detectron2.readthedocs.io/tutorials/getting_started.html),
