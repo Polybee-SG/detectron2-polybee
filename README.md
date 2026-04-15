@@ -32,6 +32,17 @@ See [installation instructions](https://detectron2.readthedocs.io/tutorials/inst
 
 Requirements: PyTorch >= 1.8, CUDA toolkit (>= 13.0 recommended), and a C++ compiler.
 
+The build will automatically use whatever PyTorch, CUDA, and C++ compiler are available in your local environment. The resulting wheel is tied to those versions and may not be compatible with a different environment.
+
+We recommend using [Miniconda](https://docs.conda.io/en/latest/miniconda.html) to manage your environment as it makes it easy to install a consistent set of PyTorch, CUDA, and C++ compilers together:
+
+```bash
+conda create -n detectron2 python=3.12
+conda activate detectron2
+conda install pytorch torchvision pytorch-cuda=13.0 -c pytorch -c nvidia
+conda install -c conda-forge gxx
+```
+
 **Build the wheel:**
 
 ```bash
