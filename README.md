@@ -34,14 +34,21 @@ Requirements: PyTorch >= 1.8, CUDA toolkit (>= 13.0 recommended), and a C++ comp
 
 The build will automatically use whatever PyTorch, CUDA, and C++ compiler are available in your local environment. The resulting wheel is tied to those versions and may not be compatible with a different environment.
 
-We recommend using [Miniconda](https://docs.conda.io/en/latest/miniconda.html) to manage your environment as it makes it easy to install a consistent set of PyTorch, CUDA, and C++ compilers together:
+We recommend using [Miniconda](https://docs.conda.io/en/latest/miniconda.html) to manage the Python environment and C++ compiler, and installing PyTorch from its official pip wheels (the `pytorch` conda channel no longer ships current builds, and there is no `pytorch-cuda=13.0` conda package):
 
 ```bash
-conda create -n detectron2 python=3.12
+conda create -n detectron2 python=3.10
 conda activate detectron2
-conda install pytorch torchvision pytorch-cuda=13.0 -c pytorch -c nvidia
 conda install -c conda-forge gxx
+pip install torch==2.10.0 torchvision==0.25.0 --index-url https://download.pytorch.org/whl/cu130
 ```
+
+Notes:
+
+- **Python version:** set `python=3.10` to whichever version you want the wheel built for — the resulting wheel is tagged accordingly (e.g. `cp310`) and only installs on that Python version. PyTorch must publish a matching wheel for that version.
+- **CUDA version:** pick the wheel index that matches your local CUDA toolkit, e.g. `cu130` for CUDA 13.0 (run `nvcc --version` to check).
+- **Compiler:** `gxx` provides the C++ compiler nvcc needs to build the CUDA extension. Skip it only if you already have a compatible system `g++`.
+- The `torch`/`torchvision` versions above are a known-good pairing built against CUDA 13.0.
 
 **Build the wheel:**
 
